@@ -212,7 +212,7 @@ class Manager
                     //skip keys which contain namespacing characters, unless they also contain a
                     //space, which makes it JSON.
                     if (! (Str::contains($key, '::') && Str::contains($key, '.'))
-                         || Str::contains($key, ' ')) {
+                        || Str::contains($key, ' ')) {
                         $stringKeys[] = $key;
                     }
                 }
@@ -252,23 +252,28 @@ class Manager
 
     public function exportTranslations($group = null, $json = false)
     {
-        $group = basename($group);
+        $baseName = basename($group);
         $basePath = $this->app['path.lang'];
 
-        if (! is_null($group) && ! $json) {
-            if (! in_array($group, $this->config['exclude_groups'])) {
+        if (! is_null($baseName) && ! $json) {
+            if (! in_array($baseName, $this->config['exclude_groups'])) {
                 $vendor = false;
-                if ($group == '*') {
+                if ($baseName == '*') {
                     return $this->exportAllTranslations();
                 } else {
-                    if (Str::startsWith($group, 'vendor')) {
+                    if (Str::startsWith($baseName, 'vendor')) {
                         $vendor = true;
                     }
                 }
 
+                if (!str_contains($group, '/')) {
+                    // If group is not sub directory
+                    $group = basename($group);
+                }
+
                 $tree = $this->makeTree(Translation::ofTranslatedGroup($group)
-                                                    ->orderByGroupKeys(Arr::get($this->config, 'sort_keys', false))
-                                                    ->get());
+                    ->orderByGroupKeys(Arr::get($this->config, 'sort_keys', false))
+                    ->get());
 
                 foreach ($tree as $locale => $groups) {
                     $locale = basename($locale);
@@ -310,8 +315,8 @@ class Manager
 
         if ($json) {
             $tree = $this->makeTree(Translation::ofTranslatedGroup(self::JSON_GROUP)
-                                                ->orderByGroupKeys(Arr::get($this->config, 'sort_keys', false))
-                                                ->get(), true);
+                ->orderByGroupKeys(Arr::get($this->config, 'sort_keys', false))
+                ->get(), true);
 
             foreach ($tree as $locale => $groups) {
                 if (isset($groups[self::JSON_GROUP])) {
