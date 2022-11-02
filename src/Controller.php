@@ -184,6 +184,10 @@ class Controller extends BaseController
                     // Translation already exists. Skip
                     continue;
                 }
+                if (empty($base_string->value)) {
+                    // Base translation string is empty. Skip
+                    continue;
+                }
                 $translated_text = Str::apiTranslateWithAttributes($base_string->value, $newLocale, $base_locale);
                 request()->replace([
                     'value' => $translated_text,
