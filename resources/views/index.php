@@ -213,8 +213,8 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label for="new-locale">Enter target locale key</label>
-                        <input type="text" name="new-locale" class="form-control" id="new-locale" placeholder="Enter target locale key" />
+                        <label for="new-locale">Enter target locale keys</label>
+                        <input type="text" name="new-locale" class="form-control" id="new-locale" placeholder="Enter target locale key (use ',' for multiple locales)" />
                     </div>
                     <?php if(!config('laravel_google_translate.google_translate_api_key')): ?>
                         <p>
